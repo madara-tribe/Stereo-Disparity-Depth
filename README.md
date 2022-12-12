@@ -1,4 +1,4 @@
-# Disparity Calculator as SoftWare(SW)
+# Disparity Calculator for SoftWare(SW)
 
 
 
