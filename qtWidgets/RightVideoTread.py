@@ -71,9 +71,9 @@ class Thread(QThread):
                 continue
             if len(self.Rstack)==self.per_frames and len(self.Lstack)==self.per_frames:
                 start = time.time()
-                frameR = self.qt_onnx_inference(frameR)
-                frameL = self.qt_onnx_inference(frameL)
-                frames = np.concatenate((frameR, frameL), axis=1)
+                frameR_ = self.qt_onnx_inference(self.Rstack[-1])
+                frameL_ = self.qt_onnx_inference(self.Lstack[-1])
+                frames = np.concatenate((frameR_, frameL_), axis=1)
                 #frames_ = cv2.resize(frames, dim)
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(frames)
