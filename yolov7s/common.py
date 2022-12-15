@@ -58,7 +58,7 @@ def onnx_inference(session, input_tensor):
     outputs = session.run(output_names, inp)[0]
     return outputs
 
-def post_process(outputs, ori_images, ratio, dwdh):
+def post_process(outputs, ori_images, ratio, dwdh, conf_thres):
     for i, (batch_id, x0, y0, x1, y1, cls_id, score) in enumerate(outputs):
         image = ori_images[int(batch_id)]
         box = np.array([x0,y0,x1,y1])
@@ -67,6 +67,8 @@ def post_process(outputs, ori_images, ratio, dwdh):
         box = box.round().astype(np.int32).tolist()
         cls_id = int(cls_id)
         score = round(float(score),3)
+        if score < conf_thres:
+            continue
         name = names[cls_id]
         color = colors[name]
         name += ' '+str(score)

@@ -1,5 +1,3 @@
-#https://colab.research.google.com/github/WongKinYiu/yolov7/blob/main/tools/YOLOv7onnx.ipynb#scrollTo=ipHqto0J0kkq
-
 import time
 import cv2
 import onnxruntime
@@ -10,6 +8,7 @@ from .common import letterbox, preprocess, onnx_inference, post_process
 def image_inference(opt):
     cuda = False if opt.cpu=='True' else True
     onnx_path = opt.onnx_path
+    conf_thres = opt.conf_thres
     img = cv2.imread(opt.img_path)
     ori_images = [img.copy()]
     providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
@@ -26,11 +25,10 @@ def image_inference(opt):
     print("start inference", cuda)
     start = time.perf_counter()
     outputs = onnx_inference(session, input_tensor)
-    pred_output = post_process(outputs, ori_images, ratio, dwdh)
+    pred_output = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
     if isinstance(pred_output, list):
         pred_output = pred_output[0]
     print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
     print("output shape is ", pred_output.shape)
     cv2.imwrite("output.png", pred_output)
     
-  

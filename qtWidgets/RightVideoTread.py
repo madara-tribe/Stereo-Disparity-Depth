@@ -19,7 +19,15 @@ class Thread(QThread):
         self.capL = cv2.VideoCapture(opt.lvid_path)
         self.pred_time = 0
         self.vid_side = opt.vid_size
+        self.conf_thres = opt.conf_thres
+        self.per_frames = opt.per_frames
+        self.Rstack = []
+        self.Lstack = []
         self.init_onnx_model()
+        
+    def frame_reset(self):
+        self.Rstack = []
+        self.Lstack = []
         
     def openCV2Qimage(self, cvImage):
         resizedW, resizedW = self.vid_side*2, self.vid_side
@@ -43,7 +51,7 @@ class Thread(QThread):
         resized_image, ratio, dwdh = letterbox(frame, new_shape=self.new_shape, auto=False)
         input_tensor = preprocess(resized_image)
         outputs = onnx_inference(self.session, input_tensor)
-        pred_output = post_process(outputs, ori_images, ratio, dwdh)
+        pred_output = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
         return pred_output[0]
         
     def run(self):
@@ -54,22 +62,26 @@ class Thread(QThread):
             try:
                 retR, frameR = self.capR.read()
                 retL, frameL = self.capL.read()
-                if not retR or not retL:
+                self.Rstack.append(frameR)
+                self.Lstack.append(frameL)
+                if not retR and not retL:
                     break
             except Exception as e:
                 print(e)
                 continue
-            start = time.time()
-            frameR = self.qt_onnx_inference(frameR)
-            frameL = self.qt_onnx_inference(frameL)
-            frames = np.concatenate((frameR, frameL), axis=1)
-            #frames_ = cv2.resize(frames, dim)
-            # Creating and scaling QImage
-            img = self.openCV2Qimage(frames)
-            scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)
-            self.pred_time = np.round((time.time() - start), decimals=5)
-            # Emit signal
-            self.updateFrame.emit(scaled_img)
+            if len(self.Rstack)==self.per_frames and len(self.Lstack)==self.per_frames:
+                start = time.time()
+                frameR = self.qt_onnx_inference(frameR)
+                frameL = self.qt_onnx_inference(frameL)
+                frames = np.concatenate((frameR, frameL), axis=1)
+                #frames_ = cv2.resize(frames, dim)
+                # Creating and scaling QImage
+                img = self.openCV2Qimage(frames)
+                scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)
+                self.pred_time = np.round((time.time() - start), decimals=5)
+                # Emit signal
+                self.updateFrame.emit(scaled_img)
+                self.frame_reset()
         self.capR.release()
         self.capL.release()
         sys.exit(-1)

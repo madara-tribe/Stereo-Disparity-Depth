@@ -15,6 +15,8 @@ def get_parser():
     parser.add_argument('--img_path', type=str, default='data/images/bus.jpg', help='image path')
     parser.add_argument('--onnx_path', type=str, default='yolov7Tiny_640_640.onnx', help='image path')
     parser.add_argument('--cpu', type=str, default='True', help='if cpu is None, use CUDA')
+    parser.add_argument('--per_frames', type=int, default=5, help='num frames to predict at each thread for reducing device burden')
+    parser.add_argument('--conf-thres', type=float, default=0.25, help='conf threshold for NMS or postprocess')
     parser.add_argument('--rvid_path', type=str, default='data/right.mp4', help='right video path')
     parser.add_argument('--lvid_path', type=str, default='data/left.mp4', help='left video path')
     parser.add_argument('--vid_size', type=int, default=250, help='Display video size')
