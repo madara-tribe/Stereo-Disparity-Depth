@@ -1,8 +1,10 @@
 import cv2
 import random
+import math
 import numpy as np
 import onnxruntime
 
+TARGET_CANDIDATE_CLS = ['clock', 'cell phone', 'tv', 'remote', 'cup']
 
 names = ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
@@ -59,6 +61,7 @@ def onnx_inference(session, input_tensor):
     return outputs
 
 def post_process(outputs, ori_images, ratio, dwdh, conf_thres):
+    box_x = 0
     for i, (batch_id, x0, y0, x1, y1, cls_id, score) in enumerate(outputs):
         image = ori_images[int(batch_id)]
         box = np.array([x0,y0,x1,y1])
@@ -70,9 +73,14 @@ def post_process(outputs, ori_images, ratio, dwdh, conf_thres):
         if score < conf_thres:
             continue
         name = names[cls_id]
+        if name not in TARGET_CANDIDATE_CLS:
+            continue
         color = colors[name]
         name += ' '+str(score)
         cv2.rectangle(image, box[:2], box[2:], color, 2)
         cv2.putText(image, name, (box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75,[225, 255, 255],thickness=2)
-    return ori_images
+        box_x += box[2:][0]
+    return ori_images, box_x
 
+
+   

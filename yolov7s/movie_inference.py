@@ -4,15 +4,17 @@ import cv2
 import numpy as np
 import onnxruntime
 import multiprocessing
-from common import letterbox, preprocess, onnx_inference, post_process
-
+from common import letterbox, preprocess, onnx_inference, post_process #, prams_calcurator
+from dist_calcurator import prams_calcurator
 
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--onnx_path', type=str, default='yolov7Tiny_640_640.onnx', help='image path')
     parser.add_argument('--cpu', type=str, default='True', help='if cpu is None, use CUDA')
-    parser.add_argument('--per_frames', type=int, default=3, help='num frames to predict at each thread for reducing device burden')
+    parser.add_argument('--per_frames', type=int, default=5, help='num frames to predict at each thread for reducing device burden')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='conf threshold for NMS or postprocess')
+    parser.add_argument('--max_disparity', type=int, default=240, help='max disparity')
+    parser.add_argument('--min_disparity', type=int, default=15, help='max disparity')
     parser.add_argument('--rvid_path', type=str, default='data/right.mp4', help='right video path')
     parser.add_argument('--lvid_path', type=str, default='data/left.mp4', help='left video path')
     opt = parser.parse_args()
@@ -28,14 +30,16 @@ def inference_(frame, session, new_shape, conf_thres):
     resized_image, ratio, dwdh = letterbox(frame, new_shape=new_shape, auto=False)
     input_tensor = preprocess(resized_image)
     outputs = onnx_inference(session, input_tensor)
-    pred_output = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
-    return pred_output
+    pred_output, box_x = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
+    return pred_output, box_x
     
 
 def video_inference(opt):
     onnx_path = opt.onnx_path
     per_frames = opt.per_frames
     conf_thres = opt.conf_thres
+    max_disparity = opt.max_disparity
+    min_disparity = opt.min_disparity
     cuda = False if opt.cpu=='True' else True
     start_time = 0
     capR = load_caps(vid_path=opt.rvid_path, start_time=start_time)
@@ -50,7 +54,7 @@ def video_inference(opt):
     Rstack = []
     Lstack = []
     cv2.namedWindow("Detected Objects", cv2.WINDOW_NORMAL)
-    #c = 1
+    c = 1
     while capR.isOpened() and capL.isOpened():
         try:
             retR, frame_right = capR.read()
@@ -64,14 +68,21 @@ def video_inference(opt):
             continue
         if len(Rstack)==per_frames and len(Lstack)==per_frames:
             # inference each frame
-            right_output = inference_(Rstack[-1], session, new_shape, conf_thres)
-            left_output = inference_(Lstack[-1], session, new_shape, conf_thres)
+            right_output, RboxW = inference_(Rstack[-1], session, new_shape, conf_thres)
+            left_output, LboxW = inference_(Lstack[-1], session, new_shape, conf_thres)
             frames = np.concatenate((right_output[0], left_output[0]), axis=1)
-            cv2.imshow("Detected Objects", frames)
-            #cv2.imwrite('results/frame_{}.png'.format(c), frames)
-            #c +=1
             Rstack=[]
             Lstack=[]
+            if RboxW >0 and LboxW > 0:
+                disparity = abs(RboxW-LboxW)
+                if disparity <= max_disparity and disparity > min_disparity:
+                    h, w = frames.shape[:2]
+                    x0, distance, angle, deg = prams_calcurator(disparity, x_pos=RboxW, width=w)
+                    texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}, deg:{}'.format(x0, distance, disparity, angle, deg)
+                    cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
+            cv2.imshow("Detected Objects", frames)
+            cv2.imwrite('results/frame_{}.png'.format(c), frames)
+            c +=1
         if cv2.waitKey(30) == 27:
             break
     capR.release()
