@@ -14,6 +14,8 @@ Its systems has left and light camera on Jetson, and calcurate video frame with 
 ```sh
 python3 main.py --qt
 ```
+<img src="https://user-images.githubusercontent.com/48679574/208105192-51a3e2a4-e6c8-47c9-93fe-98dacdb18021.png" width="600" height="500"/>
+
 
 ## image
 ```sh
@@ -23,6 +25,8 @@ python3 main.py --image
 ```sh
 python3 main.py --vid
 ```
+
+<img src="https://user-images.githubusercontent.com/48679574/208105250-9ff22852-5824-46fd-b8f5-6b3bde634f43.gif" width="600" height="500"/>
 
 
 # Formula
