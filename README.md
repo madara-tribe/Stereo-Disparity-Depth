@@ -29,7 +29,7 @@ python3 main.py --vid
 <img src="https://user-images.githubusercontent.com/48679574/208105250-9ff22852-5824-46fd-b8f5-6b3bde634f43.gif" width="500" height="200"/>
 
 
-# Formula
+# Distance and Disparity Formula
 
 ・<b>Disparity formula</b> and <b>camera size</b>：
 
