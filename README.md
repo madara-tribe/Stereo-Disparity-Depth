@@ -6,7 +6,7 @@ calcurate distance through disparity and object-detection bbox (yolov7).
 
 Its systems has left and light camera on Jetson, and calcurate video frame with realtime.
 
-<img width="799" alt="StereoVision" src="https://user-images.githubusercontent.com/48679574/208080750-93395d41-45a5-434e-91de-5a8a0928e53e.png">
+<img src="https://user-images.githubusercontent.com/48679574/208080750-93395d41-45a5-434e-91de-5a8a0928e53e.png" width="600" height="500"/>
 
 # Inference
 
