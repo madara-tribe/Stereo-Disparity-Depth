@@ -2,6 +2,11 @@
 
 # Abstract
 
+calcurate distance through disparity and object-detection bbox (yolov7).
+
+Its systems has left and light camera on Jetson, and calcurate video frame with realtime.
+
+
 # Inference
 
 ## video on PyQt
