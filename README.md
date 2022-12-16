@@ -54,7 +54,6 @@ def distance_formula(disparity):
 
 # References
 - [ONNX-YOLOv7-Object-Detection](https://github.com/ibaiGorordo/ONNX-YOLOv7-Object-Detection)
-
-
+- [webカメラ2台で距離測定その2](https://qiita.com/ringo156/items/9d4f81cd9aa70aa626ff)
 
 
