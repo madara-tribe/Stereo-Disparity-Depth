@@ -1,5 +1,40 @@
 # Disparity Calculator for SoftWare(SW)
 
+# Abstract
+
+# Inference
+
+## video on PyQt
+```sh
+python3 main.py --qt
+```
+
+## image
+```sh
+python3 main.py --image
+```
+## video
+```sh
+python3 main.py --vid
+```
+
+
+# Formula
+
+・<b>Disparity formula</b> and <b>camera size</b>：
+
+
+<b>Disparity formula by python</b>
+```python
+def disranse_formula(disparity):
+    T=2.6
+    f = 0.315
+    img_element = 0.0001*2.8
+    K = int(T*f/img_element)
+    return K/disparity
+```
+
+## Relation of Disparity and Distance(Z axis)
 
 
 # References
