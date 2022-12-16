@@ -8,7 +8,7 @@ from PySide6.QtCore import QThread, Signal, Qt
 from PySide6.QtGui import QImage
 
 from yolov7s.common import letterbox, preprocess, onnx_inference, post_process
-
+from yolov7s.dist_calcurator import prams_calcurator
 cuda = False
 class Thread(QThread):
     updateFrame = Signal(QImage)
@@ -18,9 +18,14 @@ class Thread(QThread):
         self.capR = cv2.VideoCapture(opt.rvid_path)
         self.capL = cv2.VideoCapture(opt.lvid_path)
         self.pred_time = 0
+        self.distance = 0
+        self.x0 = 0
+        self.angle = 0
         self.vid_side = opt.vid_size
         self.conf_thres = opt.conf_thres
         self.per_frames = opt.per_frames
+        self.max_disparity = opt.max_disparity
+        self.min_disparity = opt.min_disparity
         self.Rstack = []
         self.Lstack = []
         self.init_onnx_model()
@@ -51,8 +56,8 @@ class Thread(QThread):
         resized_image, ratio, dwdh = letterbox(frame, new_shape=self.new_shape, auto=False)
         input_tensor = preprocess(resized_image)
         outputs = onnx_inference(self.session, input_tensor)
-        pred_output = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
-        return pred_output[0]
+        pred_output, box_x = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
+        return pred_output[0], box_x
         
     def run(self):
         """Read frame from camera and repaint QLabel widget.
@@ -71,10 +76,17 @@ class Thread(QThread):
                 continue
             if len(self.Rstack)==self.per_frames and len(self.Lstack)==self.per_frames:
                 start = time.time()
-                frameR_ = self.qt_onnx_inference(self.Rstack[-1])
-                frameL_ = self.qt_onnx_inference(self.Lstack[-1])
+                frameR_, RboxW = self.qt_onnx_inference(self.Rstack[-1])
+                frameL_, LboxW = self.qt_onnx_inference(self.Lstack[-1])
                 frames = np.concatenate((frameR_, frameL_), axis=1)
                 #frames_ = cv2.resize(frames, dim)
+                if RboxW >0 and LboxW > 0:
+                    disparity = abs(RboxW-LboxW)
+                    if disparity <= self.max_disparity and disparity > self.min_disparity:
+                        h, w = frames.shape[:2]
+                        self.x0, self.distance, self.angle, deg = prams_calcurator(disparity, x_pos=RboxW, width=w)
+                        texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}, deg:{}'.format(self.x0, self.distance, disparity, self.angle, deg)
+                        cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(frames)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)

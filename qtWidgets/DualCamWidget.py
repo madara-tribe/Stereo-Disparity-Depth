@@ -35,7 +35,7 @@ class DualCamWidget(QWidget):
     def set1_widget_layout(self):
         # Predicted time bar
         self.predictor_layout = QHBoxLayout()
-        self.predictor_title = QLabel('Predicted time')
+        self.predictor_title = QLabel('Latency')
         self.predictbar = QLabel('', self)
         self.predictbar.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
         self.predictbar.setFixedSize(QSize(200, 40))

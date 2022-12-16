@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import onnxruntime
 import multiprocessing
-from common import letterbox, preprocess, onnx_inference, post_process #, prams_calcurator
+from common import letterbox, preprocess, onnx_inference, post_process
 from dist_calcurator import prams_calcurator
 
 def get_parser():
@@ -54,7 +54,7 @@ def video_inference(opt):
     Rstack = []
     Lstack = []
     cv2.namedWindow("Detected Objects", cv2.WINDOW_NORMAL)
-    c = 1
+    #c = 1
     while capR.isOpened() and capL.isOpened():
         try:
             retR, frame_right = capR.read()
@@ -78,11 +78,11 @@ def video_inference(opt):
                 if disparity <= max_disparity and disparity > min_disparity:
                     h, w = frames.shape[:2]
                     x0, distance, angle, deg = prams_calcurator(disparity, x_pos=RboxW, width=w)
-                    texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}, deg:{}'.format(x0, distance, disparity, angle, deg)
+                    texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}'.format(x0, distance, disparity, angle)
                     cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
             cv2.imshow("Detected Objects", frames)
-            cv2.imwrite('results/frame_{}.png'.format(c), frames)
-            c +=1
+            #cv2.imwrite('results/frame_{}.png'.format(c), frames)
+            #c +=1
         if cv2.waitKey(30) == 27:
             break
     capR.release()

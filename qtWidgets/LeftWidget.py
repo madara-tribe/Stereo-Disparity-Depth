@@ -15,18 +15,35 @@ class LeftWidget(QWidget):
         
     def setUI(self):
     
-        # FPS bar
-        self.fps_layout = QHBoxLayout()
-        self.fps_title = QLabel('Normal FPS')
-        self.fps = QLabel('', self)
-        self.fps.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
-
-        self.fps_layout.addWidget(self.fps_title)
-        self.fps_layout.addWidget(self.fps)
-        self.layout.addLayout(self.fps_layout)
-
+        # x0 params
+        self.x0_layout = QHBoxLayout()
+        self.x0_title = QLabel('X0')
+        self.x0 = QLabel('', self)
+        self.x0.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
+        self.x0_layout.addWidget(self.x0_title)
+        self.x0_layout.addWidget(self.x0)
+        
+        # distance params
+        self.distance_layout = QHBoxLayout()
+        self.distance_title = QLabel('Distance')
+        self.distance = QLabel('', self)
+        self.distance.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
+        self.distance_layout.addWidget(self.distance_title)
+        self.distance_layout.addWidget(self.distance)
+        
+        # angle params
+        self.angle_layout = QHBoxLayout()
+        self.angle_title = QLabel('Angle')
+        self.angle = QLabel('', self)
+        self.angle.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
+        self.angle_layout.addWidget(self.angle_title)
+        self.angle_layout.addWidget(self.angle)
+        
+        self.layout.addLayout(self.x0_layout)
+        self.layout.addLayout(self.distance_layout)
+        self.layout.addLayout(self.angle_layout)
         # スペーシング
-        spc = QSpacerItem(16, 16, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        spc = QSpacerItem(100, 100, QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.layout.addSpacerItem(spc)
 
         # 自身のレイアウトとして設定
@@ -40,4 +57,6 @@ class LeftWidget(QWidget):
         self.timer.start(30)
         
     def plot_bar(self):
-        self.fps.setText(str(self.th.pred_time))
+        self.x0.setText(str(self.th.x0))
+        self.distance.setText(str(self.th.distance))
+        self.angle.setText(str(self.th.angle))
