@@ -28,6 +28,8 @@ python3 main.py --vid
 # Formula
 
 ・<b>Disparity formula</b> and <b>camera size</b>：
+<img src="https://user-images.githubusercontent.com/48679574/208103502-10d83963-b34c-4268-9e89-c1109f7bf2bb.png" width="400" height="300"/><img src="https://user-images.githubusercontent.com/48679574/208103490-39835a32-649e-4cf9-adbf-51bb7d3fd85c.png" width="400" height="300"/>
+
 
 
 <b>Disparity formula by python</b>
