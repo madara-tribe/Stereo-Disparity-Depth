@@ -47,7 +47,9 @@ def disranse_formula(disparity):
     return K/disparity
 ```
 
-## Relation of Disparity and Distance(Z axis)
+### Relation of Disparity and Distance(Z axis)
+
+<img src="https://user-images.githubusercontent.com/48679574/208106182-219e477f-7608-4fd0-9345-7d29ab568933.jpg" width="400" height="300"/>
 
 
 # References
