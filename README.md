@@ -39,7 +39,7 @@ python3 main.py --vid
 
 <b>Disparity formula by python</b>
 ```python
-def disranse_formula(disparity):
+def distance_formula(disparity):
     T=2.6
     f = 0.315
     img_element = 0.0001*2.8
