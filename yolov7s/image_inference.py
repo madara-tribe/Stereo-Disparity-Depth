@@ -1,8 +1,8 @@
 import time
 import cv2
 import onnxruntime
-
-from .common import letterbox, preprocess, onnx_inference, post_process
+import numpy as np
+from .common import letterbox, preprocess, onnx_inference, img_post_process
 
 
 def image_inference(opt):
@@ -26,7 +26,7 @@ def image_inference(opt):
     print("start inference", cuda)
     start = time.perf_counter()
     outputs = onnx_inference(session, input_tensor)
-    pred_output, _ = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
+    pred_output = img_post_process(outputs, ori_images, ratio, dwdh, conf_thres)
     if isinstance(pred_output, list) or isinstance(pred_output, tuple):
          pred_output = pred_output[0]
     print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
