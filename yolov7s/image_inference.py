@@ -26,11 +26,9 @@ def image_inference(opt):
     print("start inference", cuda)
     start = time.perf_counter()
     outputs = onnx_inference(session, input_tensor)
-    pred_output = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
+    pred_output, _ = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
     if isinstance(pred_output, list) or isinstance(pred_output, tuple):
-         pred_output = np.array(pred_output[0])
-    if len(pred_output.shape)==4:
-        pred_output = pred_output.reshape(h, w, c)
+         pred_output = pred_output[0]
     print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
     print("output shape is ", pred_output.shape)
     cv2.imwrite("output.png", pred_output)
