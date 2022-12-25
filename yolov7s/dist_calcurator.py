@@ -15,10 +15,8 @@ def disranse_formula(disparity):
     K = int(T*f/img_element)
     return K/disparity
     
-def prams_calcurator(disparity, x_pos, width):
-    x0 = abs(x_pos - int(width/4))
+def prams_calcurator(disparity):
     distance = Formula.K.value / disparity   #  disranse_formula(disparity)
-    angle = np.arctan2(x0/640, distance/50)
-    return x0, np.round(distance, decimals=2), np.round(angle, decimals=4), np.rad2deg(angle)
+    return np.round(distance, decimals=2)
  
 
