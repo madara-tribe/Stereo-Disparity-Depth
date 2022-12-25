@@ -77,8 +77,8 @@ def video_inference(opt):
                 disparity = abs(RboxW-LboxW)
                 if disparity <= max_disparity and disparity > min_disparity:
                     h, w = frames.shape[:2]
-                    x0, distance, angle, deg = prams_calcurator(disparity, x_pos=RboxW, width=w)
-                    texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}'.format(x0, distance, disparity, angle)
+                    distance= prams_calcurator(disparity)
+                    texts = 'distance(z):{}, disparity:{}'.format(distance, disparity)
                     cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
             cv2.imshow("Detected Objects", frames)
             #cv2.imwrite('results/frame_{}.png'.format(c), frames)
