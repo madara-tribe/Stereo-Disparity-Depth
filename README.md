@@ -14,8 +14,7 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 ```sh
 python3 main.py --qt
 ```
-<img src="https://user-images.githubusercontent.com/48679574/208105192-51a3e2a4-e6c8-47c9-93fe-98dacdb18021.png" width="500" height="400"/>
-
+<img src="https://user-images.githubusercontent.com/48679574/210753162-1e912d47-b09e-46d5-a024-1ade37320e94.png" width="500" height="400"/>
 
 ## image
 ```sh
@@ -26,7 +25,7 @@ python3 main.py --image
 python3 main.py --vid
 ```
 
-<img src="https://user-images.githubusercontent.com/48679574/208105250-9ff22852-5824-46fd-b8f5-6b3bde634f43.gif" width="500" height="200"/>
+<img src="https://user-images.githubusercontent.com/48679574/210753196-0752cee8-d34e-466d-8a8f-34e33311cceb.gif" width="500" height="200"/>
 
 
 # Distance and Disparity Formula
