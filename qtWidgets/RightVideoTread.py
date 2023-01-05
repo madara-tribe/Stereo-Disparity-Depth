@@ -18,9 +18,10 @@ class Thread(QThread):
         self.capR = cv2.VideoCapture(opt.rvid_path)
         self.capL = cv2.VideoCapture(opt.lvid_path)
         self.pred_time = 0
+        self.disparity = 0
         self.distance = 0
-        self.x0 = 0
-        self.angle = 0
+        self.angleX = 0
+        self.angleY = 0
         self.vid_side = opt.vid_size
         self.conf_thres = opt.conf_thres
         self.per_frames = opt.per_frames
@@ -56,8 +57,8 @@ class Thread(QThread):
         resized_image, ratio, dwdh = letterbox(frame, new_shape=self.new_shape, auto=False)
         input_tensor = preprocess(resized_image)
         outputs = onnx_inference(self.session, input_tensor)
-        pred_output, box_x = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
-        return pred_output[0], box_x
+        pred_output, coordinate_x, coordinate_y = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
+        return pred_output[0], coordinate_x, coordinate_y
         
     def run(self):
         """Read frame from camera and repaint QLabel widget.
@@ -76,16 +77,16 @@ class Thread(QThread):
                 continue
             if len(self.Rstack)==self.per_frames and len(self.Lstack)==self.per_frames:
                 start = time.time()
-                frameR_, RboxW = self.qt_onnx_inference(self.Rstack[-1])
-                frameL_, LboxW = self.qt_onnx_inference(self.Lstack[-1])
+                frameR_, Rx, Ry = self.qt_onnx_inference(self.Rstack[-1])
+                frameL_, Lx, Ly = self.qt_onnx_inference(self.Lstack[-1])
                 frames = np.concatenate((frameR_, frameL_), axis=1)
                 #frames_ = cv2.resize(frames, dim)
-                if RboxW >0 and LboxW > 0:
-                    disparity = abs(RboxW-LboxW)
-                    if disparity <= self.max_disparity and disparity > self.min_disparity:
+                if Rx >0 and Lx > 0:
+                    self.disparity = abs(Rx-Lx)
+                    if self.disparity <= self.max_disparity and self.disparity > self.min_disparity:
                         h, w = frames.shape[:2]
-                        self.x0, self.distance, self.angle, deg = prams_calcurator(disparity, x_pos=RboxW, width=w)
-                        texts = 'x:{}, distance(z):{}, disparity:{}, angle : {}, deg:{}'.format(self.x0, self.distance, disparity, self.angle, deg)
+                        self.distance, self.angleX, self.angleY = prams_calcurator(self.disparity, width=w, x=Rx, y=Ry)
+                        texts = 'disp:{}, distance(z):{}, angleX:{}, angleY : {}'.format(self.disparity, self.distance, self.angleX, self.angleY)
                         cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(frames)

@@ -14,7 +14,7 @@ def get_parser():
     parser.add_argument('--per_frames', type=int, default=5, help='num frames to predict at each thread for reducing device burden')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='conf threshold for NMS or postprocess')
     parser.add_argument('--max_disparity', type=int, default=240, help='max disparity')
-    parser.add_argument('--min_disparity', type=int, default=15, help='min disparity')
+    parser.add_argument('--min_disparity', type=int, default=15, help='max disparity')
     parser.add_argument('--rvid_path', type=str, default='data/right.mp4', help='right video path')
     parser.add_argument('--lvid_path', type=str, default='data/left.mp4', help='left video path')
     opt = parser.parse_args()
@@ -30,8 +30,8 @@ def inference_(frame, session, new_shape, conf_thres):
     resized_image, ratio, dwdh = letterbox(frame, new_shape=new_shape, auto=False)
     input_tensor = preprocess(resized_image)
     outputs = onnx_inference(session, input_tensor)
-    pred_output, box_x = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
-    return pred_output, box_x
+    pred_output, coordinate_x, coordinate_y = post_process(outputs, ori_images, ratio, dwdh, conf_thres)
+    return pred_output, coordinate_x, coordinate_y
     
 
 def video_inference(opt):
@@ -54,7 +54,7 @@ def video_inference(opt):
     Rstack = []
     Lstack = []
     cv2.namedWindow("Detected Objects", cv2.WINDOW_NORMAL)
-    #c = 1
+    c = 1
     while capR.isOpened() and capL.isOpened():
         try:
             retR, frame_right = capR.read()
@@ -68,21 +68,21 @@ def video_inference(opt):
             continue
         if len(Rstack)==per_frames and len(Lstack)==per_frames:
             # inference each frame
-            right_output, RboxW = inference_(Rstack[-1], session, new_shape, conf_thres)
-            left_output, LboxW = inference_(Lstack[-1], session, new_shape, conf_thres)
+            right_output, Rx, Ry = inference_(Rstack[-1], session, new_shape, conf_thres)
+            left_output, Lx, Ly = inference_(Lstack[-1], session, new_shape, conf_thres)
             frames = np.concatenate((right_output[0], left_output[0]), axis=1)
             Rstack=[]
             Lstack=[]
-            if RboxW >0 and LboxW > 0:
-                disparity = abs(RboxW-LboxW)
+            if Rx >0 and Lx > 0:
+                disparity = abs(Rx-Lx)
                 if disparity <= max_disparity and disparity > min_disparity:
                     h, w = frames.shape[:2]
-                    distance= prams_calcurator(disparity)
-                    texts = 'distance(z):{}, disparity:{}'.format(distance, disparity)
+                    distance, angleX, angleY = prams_calcurator(disparity, width=w, x=Rx, y=Ry)
+                    texts = 'disp:{}, distance(z):{}, angleX:{}, angleY : {}'.format(disparity, distance, angleX, angleY)
                     cv2.putText(frames, texts, (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255],thickness=2)
             cv2.imshow("Detected Objects", frames)
-            #cv2.imwrite('results/frame_{}.png'.format(c), frames)
-            #c +=1
+            cv2.imwrite('results/frame_{}.png'.format(c), frames)
+            c +=1
         if cv2.waitKey(30) == 27:
             break
     capR.release()
