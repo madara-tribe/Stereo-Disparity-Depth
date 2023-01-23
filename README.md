@@ -10,6 +10,13 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 
 ・[yolov7Tiny_640_640.onnx](https://drive.google.com/file/d/1QHrRELI8nPjyryiBhyCVEnSk8y8_ziYG/view?usp=sharing)
 
+
+# Disparity and bbox moment
+
+relations of Disparity and bbox moment with right and left images
+
+
+
 # Inference
 
 ## video on PyQt
