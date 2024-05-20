@@ -1,7 +1,5 @@
 # Disparity Calculator for SoftWare (version = PX2.2)
 
-# Abstract
-
 calcurate distance through disparity and object-detection bbox (yolov7).
 
 Its systems has left and light camera on Jetson, and calcurate distance and disarity from video frame with realtime.
@@ -9,8 +7,7 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 <img src="https://user-images.githubusercontent.com/48679574/208080750-93395d41-45a5-434e-91de-5a8a0928e53e.png" width="500" height="300"/>
 
 
-・[yolov7Tiny_640_640.onnx](https://drive.google.com/file/d/1QHrRELI8nPjyryiBhyCVEnSk8y8_ziYG/view?usp=sharing)
-
+・[version=PX2.0](https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/tree/px2.0)
 
 # Disparity and bbox moment
 
@@ -18,7 +15,7 @@ relations of Disparity and bbox moment with right and left images
 
 <img src="https://user-images.githubusercontent.com/48679574/213966828-29a7f9e2-42f8-4d24-a01f-b439ba581de0.gif" width="400" height="300"/>
 
-### Relation of Disparity and Distance(Z axis)
+## Relation of Disparity and Distance(Z axis)
 
 <img src="https://user-images.githubusercontent.com/48679574/208106182-219e477f-7608-4fd0-9345-7d29ab568933.jpg" width="300" height="200"/>
 
@@ -26,14 +23,14 @@ relations of Disparity and bbox moment with right and left images
 
 # Inference
 
-## video on PyQt
+### video on PyQt
 
 adjust and calibrate parameter by video
 ```sh
 python3 main.py --vid
 ```
 
-## image
+### image
 adjust and calibrate parameter by single image 
 
 ```sh
