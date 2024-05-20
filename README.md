@@ -16,7 +16,7 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 
 relations of Disparity and bbox moment with right and left images
 
-<img src="https://user-images.githubusercontent.com/48679574/213966828-29a7f9e2-42f8-4d24-a01f-b439ba581de0.gif" width="500" height="400"/>
+<img src="https://user-images.githubusercontent.com/48679574/213966828-29a7f9e2-42f8-4d24-a01f-b439ba581de0.gif" width="400" height="300"/>
 
 
 # Inference
@@ -34,15 +34,15 @@ adjust and calibrate parameter by single image
 ```sh
 python3 main.py --image
 ```
-![スクリーンショット 2024-05-20 13 41 39]()
-<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/assets/48679574/4b7f6827-7ed4-4bd6-9b55-3790dfdbc0cb" width="500" height="200"/>
+
+<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/assets/48679574/4b7f6827-7ed4-4bd6-9b55-3790dfdbc0cb" width="400" height="300"/>
 
 
 # Update Distance and Disparity Formula
 
 ・<b>Disparity formula</b> and <b>camera size</b>：
 
-<img src="https://user-images.githubusercontent.com/48679574/208103502-10d83963-b34c-4268-9e89-c1109f7bf2bb.png" width="400" height="300"/><img src="https://user-images.githubusercontent.com/48679574/208103490-39835a32-649e-4cf9-adbf-51bb7d3fd85c.png" width="300" height="300"/>
+<img src="https://user-images.githubusercontent.com/48679574/208103490-39835a32-649e-4cf9-adbf-51bb7d3fd85c.png" width="400" height="300"/>
 
 
 
