@@ -1,8 +1,6 @@
 import cv2
 import random
-import math
 import numpy as np
-import onnxruntime
 
 TARGET_CANDIDATE_CLS = ['clock', 'cell phone', 'tv', 'remote', 'cup']
 

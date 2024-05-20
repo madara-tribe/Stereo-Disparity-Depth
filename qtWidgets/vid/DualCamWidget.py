@@ -1,12 +1,8 @@
-import os, sys
-import numpy as np
-import cv2
-import time
 from PySide6.QtCore import Slot, QSize
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget)
 
-from qtWidgets.RightVideoTread import Thread
+from qtWidgets.vid.RightVideoTread import Thread
 
 class DualCamWidget(QWidget):
     def __init__(self, parent=None, opt=None):

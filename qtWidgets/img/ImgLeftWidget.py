@@ -1,10 +1,9 @@
-import numpy as np
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QSpacerItem, QSizePolicy
 from PySide6.QtCore import QTimer
 
-class LeftWidget(QWidget):
+class ImgLeftWidget(QWidget):
     def __init__(self, parent=None, th = None):
-        super(LeftWidget, self).__init__(parent)
+        super(ImgLeftWidget, self).__init__(parent)
 
         self.layout = QVBoxLayout()
         self.cur_fps = 0
@@ -23,7 +22,7 @@ class LeftWidget(QWidget):
         
         # distance params
         self.distance_layout = QHBoxLayout()
-        self.distance_title = QLabel('Distance')
+        self.distance_title = QLabel('Distance [cm]')
         self.distance = QLabel('', self)
         self.distance.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
         self.distance_layout.addWidget(self.distance_title)
@@ -31,7 +30,7 @@ class LeftWidget(QWidget):
         
         # angle X params
         self.angleX_layout = QHBoxLayout()
-        self.angleX_title = QLabel('Angle X')
+        self.angleX_title = QLabel('Angle X [deg]')
         self.angleX = QLabel('', self)
         self.angleX.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
         self.angleX_layout.addWidget(self.angleX_title)
@@ -39,7 +38,7 @@ class LeftWidget(QWidget):
         
         # angle Y params
         self.angleY_layout = QHBoxLayout()
-        self.angleY_title = QLabel('Angle X')
+        self.angleY_title = QLabel('Angle Y [deg]')
         self.angleY = QLabel('', self)
         self.angleY.setStyleSheet('font-family: Times New Roman; font-size: 15px; color: black; background-color: azure')
         self.angleY_layout.addWidget(self.angleY_title)
