@@ -27,7 +27,6 @@ adjust and calibrate parameter by video
 ```sh
 python3 main.py --vid
 ```
-<img src="https://user-images.githubusercontent.com/48679574/210753162-1e912d47-b09e-46d5-a024-1ade37320e94.png" width="500" height="400"/>
 
 ## image
 adjust and calibrate parameter by single image 
@@ -35,8 +34,8 @@ adjust and calibrate parameter by single image
 ```sh
 python3 main.py --image
 ```
-
-<img src="https://user-images.githubusercontent.com/48679574/210753196-0752cee8-d34e-466d-8a8f-34e33311cceb.gif" width="500" height="200"/>
+![スクリーンショット 2024-05-20 13 41 39]()
+<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/assets/48679574/4b7f6827-7ed4-4bd6-9b55-3790dfdbc0cb" width="500" height="200"/>
 
 
 # Update Distance and Disparity Formula
@@ -49,12 +48,20 @@ python3 main.py --image
 
 <b>Disparity formula by python</b>
 ```python
-def distance_formula(disparity):
-    T=2.6
-    f = 0.315
-    img_element = 0.0001*2.8
-    K = int(T*f/img_element)
-    return K/disparity
+class CAM_PARAM(Enum):
+    W_ELEMENT = 3280
+    H_ELEMENT = 2464
+    F = 0.315 # [cm]
+    CMS = 1/4 # 8MP, h:1.12 μm, w:1.12μm
+    CAMS_DIST = 2.6 # [cm]
+    ELEMENT = 0.000112 # [cm]
+
+def distance_formula(disparity, w_element):
+    B = CAM_PARAM.CAMS_DIST.value
+    f = CAM_PARAM.F.value
+    d = w_element
+    dist = (f/d)*(B/disparity)
+    return dist
 ```
 
 ### Relation of Disparity and Distance(Z axis)
