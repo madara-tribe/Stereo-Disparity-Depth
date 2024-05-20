@@ -1,5 +1,8 @@
 # Disparity Calculator for SoftWare (version = PX2.2)
 
+・[version=PX2.0](https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/tree/px2.0)
+
+
 calcurate distance through disparity and object-detection bbox (yolov7).
 
 Its systems has left and light camera on Jetson, and calcurate distance and disarity from video frame with realtime.
@@ -7,7 +10,6 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 <img src="https://user-images.githubusercontent.com/48679574/208080750-93395d41-45a5-434e-91de-5a8a0928e53e.png" width="500" height="300"/>
 
 
-・[version=PX2.0](https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/tree/px2.0)
 
 # Disparity and bbox moment
 
