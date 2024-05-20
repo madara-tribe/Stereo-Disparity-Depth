@@ -73,3 +73,4 @@ def distance_formula(disparity, w_element):
 # References
 - [Stereo Vision: Depth Estimation between object and camera](https://medium.com/analytics-vidhya/distance-estimation-cf2f2fd709d8)
 - [Getting real depth from disparity map](https://stackoverflow.com/questions/23039961/getting-real-depth-from-disparity-map)
+- [optical camera technical information](https://www.shodensha-inc.co.jp/solution/)
