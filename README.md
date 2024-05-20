@@ -1,4 +1,4 @@
-# Disparity Calculator for SoftWare (Prototype SW)
+# Disparity Calculator for SoftWare (version = PX2.2)
 
 # Abstract
 
@@ -22,24 +22,24 @@ relations of Disparity and bbox moment with right and left images
 # Inference
 
 ## video on PyQt
+
+adjust and calibrate parameter by video
 ```sh
-python3 main.py --qt
+python3 main.py --vid
 ```
 <img src="https://user-images.githubusercontent.com/48679574/210753162-1e912d47-b09e-46d5-a024-1ade37320e94.png" width="500" height="400"/>
 
 ## image
+adjust and calibrate parameter by single image 
+
 ```sh
 python3 main.py --image
-```
-## video
-```sh
-python3 main.py --vid
 ```
 
 <img src="https://user-images.githubusercontent.com/48679574/210753196-0752cee8-d34e-466d-8a8f-34e33311cceb.gif" width="500" height="200"/>
 
 
-# Distance and Disparity Formula
+# Update Distance and Disparity Formula
 
 ・<b>Disparity formula</b> and <b>camera size</b>：
 
@@ -63,7 +63,5 @@ def distance_formula(disparity):
 
 
 # References
-- [ONNX-YOLOv7-Object-Detection](https://github.com/ibaiGorordo/ONNX-YOLOv7-Object-Detection)
-- [webカメラ2台で距離測定その2](https://qiita.com/ringo156/items/9d4f81cd9aa70aa626ff)
-- [yolo-onnx-tensorrt](https://github.com/bei91/yolov5-onnx-tensorrt)
-
+- [Stereo Vision: Depth Estimation between object and camera](https://medium.com/analytics-vidhya/distance-estimation-cf2f2fd709d8)
+- [Getting real depth from disparity map](https://stackoverflow.com/questions/23039961/getting-real-depth-from-disparity-map)
