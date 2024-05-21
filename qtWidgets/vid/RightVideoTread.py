@@ -72,9 +72,9 @@ class Thread(QThread):
                 frameL_, Lx, Ly = self.qt_onnx_inference(frameL)
                 output = np.concatenate((frameR_, frameL_), axis=1)
                 if Rx >0 and Lx > 0:
-                    self.disparity = abs(Rx-Lx)
-                    if self.disparity <= self.max_disparity and self.disparity > self.min_disparity:
-                        self.distance, self.angleX, self.angleY = prams_calcurator(self.disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+                    disparity = abs(Rx-Lx)
+                    if disparity <= self.max_disparity and disparity > self.min_disparity:
+                        self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(output)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)

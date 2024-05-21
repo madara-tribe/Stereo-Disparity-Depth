@@ -64,10 +64,10 @@ class Thread(QThread):
         cv2.circle(outputL, center=(Lx, Ly), radius=20, color=(0, 255, 255), thickness=-1)
         output = np.concatenate((outputR, outputL), axis=1)
         if Rx >0 and Lx > 0:
-            self.disparity = abs(Rx-Lx)
-            print('self.disparity', self.disparity)
-            if self.disparity <= self.max_disparity and self.disparity > self.min_disparity:
-                self.distance, self.angleX, self.angleY = prams_calcurator(self.disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+            disparity = abs(Rx-Lx)
+            print('disparity', disparity)
+            if disparity <= self.max_disparity and disparity > self.min_disparity:
+                self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(output)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)
