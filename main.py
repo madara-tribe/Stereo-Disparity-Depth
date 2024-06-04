@@ -1,5 +1,7 @@
 import argparse
-import sys, os
+import sys
+import os
+import yaml
 import signal
 from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QDockWidget
 from PySide6.QtCore import Qt
@@ -17,24 +19,25 @@ def get_parser():
     parser.add_argument('--cpu', type=str, default='True', help='if cpu is None, use CUDA')
     parser.add_argument('--frame_interval', type=int, default=50, help='interval time to reduce device burden')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='conf threshold for NMS or postprocess')
-    parser.add_argument('--max_disparity', type=int, default=250, help='max disparity')
-    parser.add_argument('--min_disparity', type=int, default=20, help='max disparity')
-    parser.add_argument('--rimg_path', type=str, default='data/right/000092.jpg', help='right img path')
-    parser.add_argument('--limg_path', type=str, default='data/left/000092.jpg', help='left img path')
+    parser.add_argument('--max_disparity', type=int, default=500, help='max disparity')
+    parser.add_argument('--min_disparity', type=int, default=3, help='max disparity')
+    parser.add_argument('--rimg_path', type=str, default='data/right/image_039.png', help='right img path')
+    parser.add_argument('--limg_path', type=str, default='data/left/image_039.png', help='left img path')
     parser.add_argument('--rvid_path', type=str, default='data/right.mp4', help='right video path')
     parser.add_argument('--lvid_path', type=str, default='data/left.mp4', help='left video path')
     parser.add_argument('--vid_size', type=int, default=250, help='Display video size')
+    parser.add_argument('--hyp', type=str, default='hyp.waveshare.imx219.83.yaml', help='waveshare IMX219-83 hyperparameters path')
     opt = parser.parse_args()
     return opt
 
     
-class MyMainWindow(QMainWindow):
-    def __init__(self, opt, parent=None):
-        super(MyMainWindow, self).__init__(parent)
+class ImgMainWindow(QMainWindow):
+    def __init__(self, opt, hyp, parent=None):
+        super(ImgMainWindow, self).__init__(parent)
         
         # RIGHT Side camera widget
         self.plot_layout = QVBoxLayout()
-        self.right_widget = imgDualCamWidget(self, opt)
+        self.right_widget = imgDualCamWidget(self, opt, hyp)
         self.plot_layout.addWidget(self.right_widget)
         self.setCentralWidget(self.right_widget)
         
@@ -52,12 +55,12 @@ class MyMainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.leftDock)
  
 class VidMainWindow(QMainWindow):
-    def __init__(self, opt, parent=None):
+    def __init__(self, opt, hyp, parent=None):
         super(VidMainWindow, self).__init__(parent)
         
         # RIGHT Side camera widget
         self.plot_layout = QVBoxLayout()
-        self.right_widget = vidDualCamWidget(self, opt)
+        self.right_widget = vidDualCamWidget(self, opt, hyp)
         self.plot_layout.addWidget(self.right_widget)
         self.setCentralWidget(self.right_widget)
         
@@ -73,14 +76,14 @@ class VidMainWindow(QMainWindow):
                                   | QDockWidget.DockWidgetFloatable)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.leftDock)
         
-def main(opt):
+def main(opt, hyp):
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
     W = opt.vid_size*4
     H = opt.vid_size*3
     if opt.img:
         try:
-            w = MyMainWindow(opt)
+            w = ImgMainWindow(opt, hyp)
             w.setWindowTitle("PySide Layout on QMainWindow")
             w.resize(W, H)
             w.show()
@@ -89,7 +92,7 @@ def main(opt):
             app.shutdown()
     elif opt.vid:
         try:
-            w = VidMainWindow(opt)
+            w = VidMainWindow(opt, hyp)
             w.setWindowTitle("PySide Layout on QMainWindow")
             w.resize(W, H)
             w.show()
@@ -103,4 +106,6 @@ def main(opt):
         
 if __name__ == '__main__':
     opt = get_parser()
-    main(opt)
+    with open(opt.hyp, errors='ignore') as f:
+        hyp = yaml.safe_load(f)
+    main(opt, hyp)
