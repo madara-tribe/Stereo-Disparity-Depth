@@ -5,20 +5,19 @@ from PySide6.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QW
 from qtWidgets.vid.RightVideoTread import Thread
 
 class DualCamWidget(QWidget):
-    def __init__(self, parent=None, opt=None):
+    def __init__(self, parent=None, opt=None, hyp=None):
         super().__init__(parent)
         self.parent = parent
-        self.opt = opt
         self.vid_size = opt.vid_size
         self.displayH, self.displayW = opt.vid_size*3, opt.vid_size*3
         
         self.setup_ui()
-        self.set_thread(opt)
+        self.set_thread(opt, hyp)
         self.predictbar.setText('Now Loading')
         
         
-    def set_thread(self, opt):
-        self.th = Thread(self, opt=opt)
+    def set_thread(self, opt, hyp):
+        self.th = Thread(self, opt=opt, hyp=hyp)
         self.th.updateFrame.connect(self.setImage)
         self.th.updateFrame.connect(self.plot_fps)
         

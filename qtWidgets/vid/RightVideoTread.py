@@ -8,11 +8,15 @@ from PySide6.QtGui import QImage
 from yolov7s.common import letterbox, preprocess, onnx_inference, post_process
 from yolov7s.dist_calcurator import prams_calcurator
 cuda = False
+
+
 class Thread(QThread):
     updateFrame = Signal(QImage)
-    def __init__(self, parent=None, opt=None):
+    def __init__(self, parent=None, opt=None, hyp=None):
         QThread.__init__(self, parent)
         self.opt = opt
+        self.hyp = hyp
+        #self.resizeW, self.resizeH = self.hyp['display_width'], self.hyp['display_height']
         self.capR = cv2.VideoCapture(opt.rvid_path)
         self.capL = cv2.VideoCapture(opt.lvid_path)
         self.pred_time = 0
@@ -66,15 +70,15 @@ class Thread(QThread):
             self.Lstack.append(frameL)
             self.count += 0.01
             if (time.time() - self.count) > self.TIMEOUT:
+                wlen, hlwn = frameR.shape[:2]
                 start = time.time()
-                hlen, wlen = frameL.shape[:2]
                 frameR_, Rx, Ry = self.qt_onnx_inference(frameR)
                 frameL_, Lx, Ly = self.qt_onnx_inference(frameL)
                 output = np.concatenate((frameR_, frameL_), axis=1)
                 if Rx >0 and Lx > 0:
                     disparity = abs(Rx-Lx)
                     if disparity <= self.max_disparity and disparity > self.min_disparity:
-                        self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+                        self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(self.hyp, disparity, width=wlen, height=hlwn, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(output)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)

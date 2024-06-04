@@ -14,9 +14,11 @@ cuda = False
 
 class Thread(QThread):
     updateFrame = Signal(QImage)
-    def __init__(self, parent=None, opt=None):
+    def __init__(self, parent=None, opt=None, hyp=None):
         QThread.__init__(self, parent)
+        self.hyp = hyp
         self.opt = opt
+        self.resizeW, self.resizeH = self.hyp['display_width'], self.hyp['display_height']
         self.disparity = 0
         self.distance = 0
         self.angleX = 0
@@ -46,28 +48,28 @@ class Thread(QThread):
     def qt_onnx_inference(self, frame):
         ori_images = [frame.copy()]
         resized_image, ratio, dwdh = letterbox(frame, new_shape=self.new_shape, auto=False)
+        print(resized_image.shape)
         input_tensor = preprocess(resized_image)
         outputs = onnx_inference(self.session, input_tensor)
         pred_output, coordinate_x, coordinate_y = post_process(outputs, ori_images, ratio, dwdh, self.conf_thres)
         return pred_output[0], int(coordinate_x), int(coordinate_y)
         
     def run(self):
-        """Read frame from camera and repaint QLabel widget.
-        """
         imgR = cv2.imread(self.opt.rimg_path)
         imgL = cv2.imread(self.opt.limg_path)
-        hlen, wlen = imgL.shape[:2]
         start = time.time()
         outputR, Rx, Ry = self.qt_onnx_inference(imgR)
         outputL, Lx, Ly = self.qt_onnx_inference(imgL)
         cv2.circle(outputR, center=(Rx, Ry), radius=20, color=(0, 255, 255), thickness=-1)
         cv2.circle(outputL, center=(Lx, Ly), radius=20, color=(0, 255, 255), thickness=-1)
         output = np.concatenate((outputR, outputL), axis=1)
+        print(Rx, Lx)
         if Rx >0 and Lx > 0:
             disparity = abs(Rx-Lx)
-            print('disparity', disparity)
+            wlen, hlwn = imgR.shape[:2]
+            print('disparity', disparity, wlen, hlwn)
             if disparity <= self.max_disparity and disparity > self.min_disparity:
-                self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+                self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(self.hyp, disparity, width=wlen, height=hlwn, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(output)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)

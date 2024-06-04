@@ -1,0 +1,13 @@
+capture_width: 1920
+capture_height: 1080
+display_width: 960
+display_height: 540
+FOCAL_LENTH: 0.26 # [cm]
+CAM_BASELINE: 6.0 # [cm]
+W_RESOLUTION: 3280 # [px]
+H_RESOLUTION: 2464 # [px]
+W_PIXEL_LENTH: 0.36 # [cm]
+H_PIXEL_LENTH: 0.27 # [cm]
+W_PER_PIXEL_ELEMENT: 0.000109 # [cm/px] W_PIXEL_LENTH/W_RESOLUTION
+H_PER_PIXEL_ELEMENT: 0.000109 # [cm/px] H_PIXEL_LENTH/H_RESOLUTION
+

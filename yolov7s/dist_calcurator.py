@@ -43,20 +43,20 @@ def angle_formula(x, y, width, height, distance):
     #print("dist_diff, x_angle", dist_diff, x_angle)
     return x_angle, y_angle
     
-def distance_formula(disparity, w_element):
-    B = CAM_PARAM.CAMS_DIST.value
-    f = CAM_PARAM.F.value
-    d = w_element
-    dist = (f/d)*(B/disparity)
-    # print('(f*B/d)', f, B, d, (f*B/d))
+def distance_formula(disparity, w_element, hyp):
+    B = hyp['CAM_BASELINE'] # [cm]
+    f = hyp['FOCAL_LENTH'] # [cm]
+    d = w_element # [cm/px]
+    dist = (f/d)*(B/disparity) # [cm]
+    print('(f*B/d)', f, B, d, (f*B/d))
     return dist
     
-def prams_calcurator(disparity, width, height, x, y):
-    w_element = CAM_PARAM.ELEMENT.value * (CAM_PARAM.W_ELEMENT.value / width)
-    # h_element = CAM_PARAM.ELEMENT.value * (CAM_PARAM.H_ELEMENT.value / height)
+def prams_calcurator(hyp, disparity, width, height, x, y):
+    w_element = hyp['W_PER_PIXEL_ELEMENT'] * (hyp['W_RESOLUTION'] / width) # [cm/px]
+    # h_element = hyp['H_PER_PIXEL_ELEMENT'] * (hyp['H_RESOLUTION'] / height) # [cm/px]
     # print("w_element, h_element", w_element, h_element)
-    distance = distance_formula(disparity, w_element)
+    distance = distance_formula(disparity, w_element, hyp)
     angleX, angleY = angle_formula(x, y, width, height, distance)
-    return np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
+    return disparity, np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
  
 
