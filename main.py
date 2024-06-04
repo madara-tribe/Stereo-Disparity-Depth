@@ -20,7 +20,7 @@ def get_parser():
     parser.add_argument('--frame_interval', type=int, default=50, help='interval time to reduce device burden')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='conf threshold for NMS or postprocess')
     parser.add_argument('--max_disparity', type=int, default=500, help='max disparity')
-    parser.add_argument('--min_disparity', type=int, default=3, help='max disparity')
+    parser.add_argument('--min_disparity', type=int, default=40, help='max disparity')
     parser.add_argument('--rimg_path', type=str, default='data/right/image_039.png', help='right img path')
     parser.add_argument('--limg_path', type=str, default='data/left/image_039.png', help='left img path')
     parser.add_argument('--rvid_path', type=str, default='data/right.mp4', help='right video path')
