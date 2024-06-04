@@ -13,11 +13,11 @@ class CAM_PARAM(Enum):
     H_SIDEMAXSITA = 20
  
 def dist_ratio(d):
-    if d > 30:
+    if d > 50:
         dif = CAM_PARAM.W_SIDEMAXSITA.value/12
-    elif d > 20 and d <= 30:
+    elif d > 40 and d <= 50:
         dif = CAM_PARAM.W_SIDEMAXSITA.value/10
-    elif d > 10 and d <= 20:
+    elif d > 30 and d <= 40:
         dif = CAM_PARAM.W_SIDEMAXSITA.value/8
     else:
         dif = 0
@@ -39,9 +39,9 @@ def angle_formula(x, y, width, height, distance):
         y_angle = 20 + abs(y-int(height/2)) * height_pixel_angle
 
     # dist
-    #dist_diff = dist_ratio(distance)
+    dist_diff = dist_ratio(distance)
     #print("dist_diff, x_angle", dist_diff, x_angle)
-    return x_angle, y_angle
+    return x_angle-dist_diff, y_angle
     
 def distance_formula(disparity, w_element, hyp):
     B = hyp['CAM_BASELINE'] # [cm]
