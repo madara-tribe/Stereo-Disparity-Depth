@@ -9,7 +9,7 @@ class CAM_PARAM(Enum):
     CMS = 1/4 # 8MP, h:1.12 μm, w:1.12μm
     CAMS_DIST = 2.6 # [cm]
     ELEMENT = 0.000112 # [cm]
-    W_SIDEMAXSITA = 50
+    W_SIDEMAXSITA = 100
     H_SIDEMAXSITA = 20
  
 def dist_ratio(d):
@@ -23,25 +23,14 @@ def dist_ratio(d):
         dif = 0
     return dif
     
-def angle_formula(x, y, width, height, distance):
-    ox, oy = abs(x-int(width/2)), abs(y-int(height/2))
-    width_pixel_angle = CAM_PARAM.W_SIDEMAXSITA.value/int(width/2)
-    height_pixel_angle = CAM_PARAM.H_SIDEMAXSITA.value/int(height/2)
-    # x angle
-    if x < int(width/2):
-        x_angle = 40 + (x * width_pixel_angle)
-    elif x >= int(width/2):
-        x_angle = 90 + abs(x-int(width/2)) * width_pixel_angle
-    # y angle
-    if y < int(height/2):
-        y_angle = y * height_pixel_angle
-    elif y >= int(height/2):
-        y_angle = 20 + abs(y-int(height/2)) * height_pixel_angle
+def angle_formula(x, y, w_per_angle, h_per_angle, distance):
+    width_angle = w_per_angle * x
+    height_angle = h_per_angle * y
 
     # dist
     dist_diff = dist_ratio(distance)
     #print("dist_diff, x_angle", dist_diff, x_angle)
-    return x_angle-dist_diff, y_angle
+    return width_angle, height_angle
     
 def distance_formula(disparity, w_element, hyp):
     B = hyp['CAM_BASELINE'] # [cm]
@@ -52,11 +41,11 @@ def distance_formula(disparity, w_element, hyp):
     return dist
     
 def prams_calcurator(hyp, disparity, width, height, x, y):
-    w_element = hyp['W_PER_PIXEL_ELEMENT'] * (hyp['W_RESOLUTION'] / width) # [cm/px]
-    # h_element = hyp['H_PER_PIXEL_ELEMENT'] * (hyp['H_RESOLUTION'] / height) # [cm/px]
+    w_per_angle = (hyp['W_RESOLUTION'] / width) * (CAM_PARAM.W_SIDEMAXSITA.value/ width) # [θ]
+    h_per_angle =  (hyp['H_RESOLUTION'] / height) * (CAM_PARAM.H_SIDEMAXSITA.value / height) # [θ]
     # print("w_element, h_element", w_element, h_element)
     distance = distance_formula(disparity, w_element, hyp)
-    angleX, angleY = angle_formula(x, y, width, height, distance)
+    angleX, angleY = angle_formula(x, y, w_per_angle, h_per_angle, distance)
     return disparity, np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
  
 
