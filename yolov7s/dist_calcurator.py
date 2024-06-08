@@ -6,24 +6,11 @@ class CAM_PARAM(Enum):
     W_SIDEMAXSITA = 180
     H_SIDEMAXSITA = 180
  
-def dist_ratio(d):
-    if d > 50:
-        dif = CAM_PARAM.W_SIDEMAXSITA.value/12
-    elif d > 40 and d <= 50:
-        dif = CAM_PARAM.W_SIDEMAXSITA.value/10
-    elif d > 30 and d <= 40:
-        dif = CAM_PARAM.W_SIDEMAXSITA.value/8
-    else:
-        dif = 0
-    return dif
     
-def angle_formula(x, y, w_per_angle, h_per_angle, distance):
+def angle_formula(x, y, w_per_angle, h_per_angle):
     x_angle = w_per_angle * x
     y_angle = h_per_angle * y
     # print("xper, x, yper, y", w_per_angle, x, h_per_angle, y)
-    # dist
-    #dist_diff = dist_ratio(distance)
-    #print("x, w_per_angle", x, w_per_angle)
     return x_angle, y_angle
     
 def distance_formula(disparity, w_element, hyp):
@@ -40,7 +27,7 @@ def prams_calcurator(hyp, disparity, width, height, x, y):
     w_element = hyp['W_PER_PIXEL_ELEMENT'] * (hyp['W_RESOLUTION'] / width)
     
     distance = distance_formula(disparity, w_element, hyp)
-    angleX, angleY = angle_formula(x, y, w_per_angle, h_per_angle, distance)
+    angleX, angleY = angle_formula(x, y, w_per_angle, h_per_angle)
     return disparity, np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
  
 
