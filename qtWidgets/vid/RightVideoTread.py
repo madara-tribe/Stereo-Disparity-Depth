@@ -9,6 +9,13 @@ from yolov7s.common import letterbox, preprocess, onnx_inference, post_process
 from yolov7s.dist_calcurator import prams_calcurator
 cuda = False
 
+def software2hardware_angle_convert(hyp, width, height, angleX, angleY):
+    real_w_angle = (hyp['W_RESOLUTION'] / width) * angleX * (hyp['REAL_W_LENTH'] / width)
+    # print("reverse", hyp['W_RESOLUTION'],  width,  angleX, hyp['REAL_W_LENTH'], width)
+    real_h_angle = (hyp['H_RESOLUTION'] / height) * (angleY * (hyp['REAL_H_LENTH'] / height))
+    return np.round(real_w_angle, decimals=2), np.round(real_h_angle, decimals=2)
+    
+    
 
 class Thread(QThread):
     updateFrame = Signal(QImage)
@@ -21,6 +28,8 @@ class Thread(QThread):
         self.capL = cv2.VideoCapture(opt.lvid_path)
         self.pred_time = 0
         self.angleX = self.angleY = self.distance = self.disparity = 0
+        self.real_x_angle = self.real_y_angle = 0
+        self.realWlenth = int(hyp['REAL_W_LENTH'])
         self.vid_side = opt.vid_size
         self.conf_thres = opt.conf_thres
         self.max_disparity = opt.max_disparity
@@ -70,15 +79,17 @@ class Thread(QThread):
             self.Lstack.append(frameL)
             self.count += 0.01
             if (time.time() - self.count) > self.TIMEOUT:
-                wlen, hlwn = frameR.shape[:2]
                 start = time.time()
                 frameR_, Rx, Ry = self.qt_onnx_inference(frameR)
                 frameL_, Lx, Ly = self.qt_onnx_inference(frameL)
                 output = np.concatenate((frameR_, frameL_), axis=1)
                 if Rx >0 and Lx > 0:
+                    hlen, wlen = frameR.shape[:2]
                     disparity = abs(Rx-Lx)
+                    print('disparity', disparity, wlen, hlen)
                     if disparity <= self.max_disparity and disparity > self.min_disparity:
-                        self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(self.hyp, disparity, width=wlen, height=hlwn, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+                        self.disparity, self.distance, self.angleX, self.angleY = prams_calcurator(self.hyp, disparity, width=wlen, height=hlen, x=int((Rx+Lx)/2), y=int((Ry+Ly)/2))
+                        self.real_x_angle, self.real_y_angle = software2hardware_angle_convert(self.hyp, wlen, hlen, self.angleX, self.angleY)
                 # Creating and scaling QImage
                 img = self.openCV2Qimage(output)
                 scaled_img = img.scaled(self.vid_side*3, self.vid_side*3, Qt.KeepAspectRatio)

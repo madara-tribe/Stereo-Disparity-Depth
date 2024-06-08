@@ -1,6 +1,5 @@
 import argparse
 import sys
-import os
 import yaml
 import signal
 from PySide6.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QDockWidget

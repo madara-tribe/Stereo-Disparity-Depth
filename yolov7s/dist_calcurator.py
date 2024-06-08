@@ -3,14 +3,8 @@ from enum import Enum
 
 
 class CAM_PARAM(Enum):
-    W_ELEMENT = 3280
-    H_ELEMENT = 2464
-    F = 0.315 # [cm]
-    CMS = 1/4 # 8MP, h:1.12 μm, w:1.12μm
-    CAMS_DIST = 2.6 # [cm]
-    ELEMENT = 0.000112 # [cm]
-    W_SIDEMAXSITA = 100
-    H_SIDEMAXSITA = 20
+    W_SIDEMAXSITA = 180
+    H_SIDEMAXSITA = 180
  
 def dist_ratio(d):
     if d > 50:
@@ -24,13 +18,13 @@ def dist_ratio(d):
     return dif
     
 def angle_formula(x, y, w_per_angle, h_per_angle, distance):
-    width_angle = w_per_angle * x
-    height_angle = h_per_angle * y
-
+    x_angle = w_per_angle * x
+    y_angle = h_per_angle * y
+    # print("xper, x, yper, y", w_per_angle, x, h_per_angle, y)
     # dist
-    dist_diff = dist_ratio(distance)
-    #print("dist_diff, x_angle", dist_diff, x_angle)
-    return width_angle, height_angle
+    #dist_diff = dist_ratio(distance)
+    #print("x, w_per_angle", x, w_per_angle)
+    return x_angle, y_angle
     
 def distance_formula(disparity, w_element, hyp):
     B = hyp['CAM_BASELINE'] # [cm]
@@ -41,9 +35,10 @@ def distance_formula(disparity, w_element, hyp):
     return dist
     
 def prams_calcurator(hyp, disparity, width, height, x, y):
-    w_per_angle = (hyp['W_RESOLUTION'] / width) * (CAM_PARAM.W_SIDEMAXSITA.value/ width) # [θ]
-    h_per_angle =  (hyp['H_RESOLUTION'] / height) * (CAM_PARAM.H_SIDEMAXSITA.value / height) # [θ]
-    # print("w_element, h_element", w_element, h_element)
+    w_per_angle = CAM_PARAM.W_SIDEMAXSITA.value / width # [θ]
+    h_per_angle = CAM_PARAM.H_SIDEMAXSITA.value / height # [θ]
+    w_element = hyp['W_PER_PIXEL_ELEMENT'] * (hyp['W_RESOLUTION'] / width)
+    
     distance = distance_formula(disparity, w_element, hyp)
     angleX, angleY = angle_formula(x, y, w_per_angle, h_per_angle, distance)
     return disparity, np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
