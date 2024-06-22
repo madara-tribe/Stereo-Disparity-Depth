@@ -25,22 +25,20 @@ relations of Disparity and bbox moment with right and left images
 
 # Inference
 
-### video on PyQt
-
-adjust and calibrate parameter by video
-```sh
-python3 main.py --vid
-```
+### PyQt
 
 ### image
 adjust and calibrate parameter by single image 
 
 ```sh
-python3 main.py --image
+python3 main.py --img
 ```
+### video
+test by movie 
 
-<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/assets/48679574/4b7f6827-7ed4-4bd6-9b55-3790dfdbc0cb" width="400" height="300"/>
-
+```sh
+python3 main.py --vid
+```
 
 # Update Distance and Disparity Formula
 
