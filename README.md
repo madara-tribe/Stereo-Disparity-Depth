@@ -23,7 +23,7 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 ### image
 adjust and calibrate parameter by single image 
 
-<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.2/assets/48679574/cdb83bdf-4120-4dd6-9e42-88d653e4c856" width="300" height="200"/>
+<img src="https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.2/assets/48679574/cdb83bdf-4120-4dd6-9e42-88d653e4c856" width="600" height="500"/>
 
 ```sh
 python3 main.py --img
