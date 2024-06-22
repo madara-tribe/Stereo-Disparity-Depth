@@ -35,10 +35,6 @@ python3 main.py --vid
 
 # Update Distance and Disparity Formula
 
-・<b>Disparity formula</b> and <b>camera size</b>：
-
-<img src="https://user-images.githubusercontent.com/48679574/208103490-39835a32-649e-4cf9-adbf-51bb7d3fd85c.png" width="400" height="300"/>
-
 ・[Focal Lenth mm to pixel](https://answers.opencv.org/question/17076/conversion-focal-distance-from-mm-to-pixels/)
 
 
