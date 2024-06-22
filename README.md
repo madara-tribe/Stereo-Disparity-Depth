@@ -39,24 +39,26 @@ python3 main.py --vid
 
 <img src="https://user-images.githubusercontent.com/48679574/208103490-39835a32-649e-4cf9-adbf-51bb7d3fd85c.png" width="400" height="300"/>
 
+・[Focal Lenth mm to pixel](https://answers.opencv.org/question/17076/conversion-focal-distance-from-mm-to-pixels/)
 
 
 <b>Disparity formula by python</b>
 ```python
-class CAM_PARAM(Enum):
-    W_ELEMENT = 3280
-    H_ELEMENT = 2464
-    F = 0.315 # [cm]
-    CMS = 1/4 # 8MP, h:1.12 μm, w:1.12μm
-    CAMS_DIST = 2.6 # [cm]
-    ELEMENT = 0.000112 # [cm]
+# focal lenth m to px
+fpx = forcal_lenth_px = (hyp['FOCAL_LENTH'] * width)/hyp['W_PIXEL_LENTH'] # [px]
 
-def distance_formula(disparity, w_element):
-    B = CAM_PARAM.CAMS_DIST.value
-    f = CAM_PARAM.F.value
-    d = w_element
-    dist = (f/d)*(B/disparity)
+# calcurate distance
+def distance_formula(disparity, fpx, hyp):
+    B = hyp['CAM_BASELINE'] # [mm]
+    dist = (fpx*B)/disparity # [mm]
     return dist
+
+# calcurate real x, y, z cordinate
+def real_cordinate(cx, cy, x, y, fpx, z):
+    real_x = (abs(x-cx)*z) / fpx
+    real_y = (abs(y-cy)*z) / fpx
+    print("real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z)", real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z))
+    return real_x, real_y
 ```
 
 
