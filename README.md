@@ -10,13 +10,6 @@ Its systems has left and light camera on Jetson, and calcurate distance and disa
 <img src="https://user-images.githubusercontent.com/48679574/208080750-93395d41-45a5-434e-91de-5a8a0928e53e.png" width="500" height="300"/>
 
 
-
-# Disparity and bbox moment
-
-relations of Disparity and bbox moment with right and left images
-
-<img src="https://user-images.githubusercontent.com/48679574/213966828-29a7f9e2-42f8-4d24-a01f-b439ba581de0.gif" width="400" height="300"/>
-
 ## Relation of Disparity and Distance(Z axis)
 
 <img src="https://user-images.githubusercontent.com/48679574/208106182-219e477f-7608-4fd0-9345-7d29ab568933.jpg" width="300" height="200"/>
