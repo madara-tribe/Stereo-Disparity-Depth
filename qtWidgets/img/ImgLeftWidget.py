@@ -29,29 +29,21 @@ class ImgLeftWidget(QWidget):
         self.distance_layout.addWidget(self.distance_title)
         self.distance_layout.addWidget(self.distance)
         
-        # angle X params
-        self.angleX_layout = QHBoxLayout()
-        self.angleX_title = QLabel('Angle X [deg]')
-        self.angleX = QLabel('', self)
-        self.angleX.setStyleSheet(txt_format)
-        self.angleX_layout.addWidget(self.angleX_title)
-        self.angleX_layout.addWidget(self.angleX)
+        # X params
+        self.realX_layout = QHBoxLayout()
+        self.realX_title = QLabel('real X [cm]')
+        self.realX = QLabel('', self)
+        self.realX.setStyleSheet(txt_format)
+        self.realX_layout.addWidget(self.realX_title)
+        self.realX_layout.addWidget(self.realX)
         
         # angle Y params
-        self.angleY_layout = QHBoxLayout()
-        self.angleY_title = QLabel('Angle Y [deg]')
-        self.angleY = QLabel('', self)
-        self.angleY.setStyleSheet(txt_format)
-        self.angleY_layout.addWidget(self.angleY_title)
-        self.angleY_layout.addWidget(self.angleY)
-        
-        # real W lenth
-        self.realWlenth_layout = QHBoxLayout()
-        self.realWlenth_title = QLabel('real W lenth [mm]')
-        self.realWlenth = QLabel('', self)
-        self.realWlenth.setStyleSheet(txt_format)
-        self.realWlenth_layout.addWidget(self.realWlenth_title)
-        self.realWlenth_layout.addWidget(self.realWlenth)
+        self.realY_layout = QHBoxLayout()
+        self.realY_title = QLabel('real Y [cm]')
+        self.realY = QLabel('', self)
+        self.realY.setStyleSheet(txt_format)
+        self.realY_layout.addWidget(self.realY_title)
+        self.realY_layout.addWidget(self.realY)
         
         # real x angle
         self.real_x_angle_layout = QHBoxLayout()
@@ -75,9 +67,8 @@ class ImgLeftWidget(QWidget):
         
         self.layout.addLayout(self.disp_layout)
         self.layout.addLayout(self.distance_layout)
-        self.layout.addLayout(self.angleX_layout)
-        self.layout.addLayout(self.angleY_layout)
-        self.layout.addLayout(self.realWlenth_layout)
+        self.layout.addLayout(self.realX_layout)
+        self.layout.addLayout(self.realY_layout)
         self.layout.addLayout(self.real_x_angle_layout)
         self.layout.addLayout(self.real_y_angle_layout)
         # スペーシング
@@ -97,8 +88,7 @@ class ImgLeftWidget(QWidget):
     def plot_bar(self):
         self.disp.setText(str(self.th.disparity))
         self.distance.setText(str(self.th.distance))
-        self.angleX.setText(str(self.th.angleX))
-        self.angleY.setText(str(self.th.angleY))
-        self.realWlenth.setText(str(self.th.realWlenth))
+        self.realX.setText(str(self.th.realX))
+        self.realY.setText(str(self.th.realY))
         self.real_x_angle.setText(str(self.th.real_x_angle))
         self.real_y_angle.setText(str(self.th.real_y_angle))

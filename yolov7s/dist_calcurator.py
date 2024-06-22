@@ -1,33 +1,28 @@
 import numpy as np
-from enum import Enum
-
-
-class CAM_PARAM(Enum):
-    W_SIDEMAXSITA = 180
-    H_SIDEMAXSITA = 180
  
+def angle_convert(x, y, z):
+    X_angle = np.rad2deg(np.arctan2(x, z))
+    Y_angle = np.rad2deg(np.arctan2(y, z))
+    return np.round(X_angle, decimals=2), np.round(Y_angle, decimals=2)
     
-def angle_formula(x, y, w_per_angle, h_per_angle):
-    x_angle = w_per_angle * x
-    y_angle = h_per_angle * y
-    # print("xper, x, yper, y", w_per_angle, x, h_per_angle, y)
-    return x_angle, y_angle
     
-def distance_formula(disparity, w_element, hyp):
-    B = hyp['CAM_BASELINE'] # [cm]
-    f = hyp['FOCAL_LENTH'] # [cm]
-    d = w_element # [cm/px]
-    dist = (f/d)*(B/disparity) # [cm]
-    print('(f*B/d)', f, B, d, (f*B/d))
+def real_cordinate(cx, cy, x, y, fpx, z):
+    real_x = (abs(x-cx)*z) / fpx
+    real_y = (abs(y-cy)*z) / fpx
+    print("real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z)", real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z))
+    return real_x, real_y
+    
+def distance_formula(disparity, fpx, hyp):
+    B = hyp['CAM_BASELINE'] # [mm]
+    dist = (fpx*B)/disparity # [mm]
+    print('f, B, dist', B, fpx, dist)
     return dist
     
-def prams_calcurator(hyp, disparity, width, height, x, y):
-    w_per_angle = CAM_PARAM.W_SIDEMAXSITA.value / width # [θ]
-    h_per_angle = CAM_PARAM.H_SIDEMAXSITA.value / height # [θ]
-    w_element = hyp['W_PER_PIXEL_ELEMENT'] * (hyp['W_RESOLUTION'] / width)
-    
-    distance = distance_formula(disparity, w_element, hyp)
-    angleX, angleY = angle_formula(x, y, w_per_angle, h_per_angle)
-    return disparity, np.round(distance, decimals=2), np.round(angleX, decimals=2), np.round(angleY, decimals=2)
+def prams_calcurator(hyp, disparity, width, cx, cy, x, y):
+    fpx = forcal_lenth_px = (hyp['FOCAL_LENTH'] * width)/hyp['W_PIXEL_LENTH'] # [px]
+    print('fpxxxxxx, ', fpx, width)
+    distance = distance_formula(disparity, fpx, hyp)
+    real_x, real_y = real_cordinate(cx, cy, x, y, fpx, distance)
+    return disparity, np.round(distance, decimals=2), np.round(real_x, decimals=2), np.round(real_y, decimals=2)
  
 
