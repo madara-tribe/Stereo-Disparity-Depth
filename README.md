@@ -1,4 +1,4 @@
-# Disparity Calculator for SoftWare (version = PX2.2)
+# Disparity Calculator with Stereo Vision
 
 ・[version=PX2.0](https://github.com/madara-tribe/SW-onnx-DisparityCalculator-PX2.0/tree/px2.0)
 
