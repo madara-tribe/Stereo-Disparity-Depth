@@ -1,4 +1,4 @@
-# Disparity Calculator for SoftWare (Prototype SW)
+# Disparity Calculator with Stereo Vision (Prototype version 1.0)
 
 # Abstract
 
