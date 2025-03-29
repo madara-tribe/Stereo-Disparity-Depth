@@ -1,0 +1,3 @@
+# crop best
+ffmpeg -i driving.mov -vf crop=1732:500:0:300 outdriving.mov
+# crop=w:h:x:y

@@ -1,28 +1,15 @@
 import numpy as np
- 
-def angle_convert(x, y, z):
-    X_angle = np.rad2deg(np.arctan2(x, z))
-    Y_angle = np.rad2deg(np.arctan2(y, z))
-    return np.round(X_angle, decimals=2), np.round(Y_angle, decimals=2)
-    
-    
-def real_cordinate(cx, cy, x, y, fpx, z):
-    real_x = (abs(x-cx)*z) / fpx
-    real_y = (abs(y-cy)*z) / fpx
-    print("real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z)", real_x, (abs(x-cx)*z), real_y, (abs(y-cy)*z))
-    return real_x, real_y
-    
-def distance_formula(disparity, fpx, hyp):
-    B = hyp['CAM_BASELINE'] # [mm]
-    dist = (fpx*B)/disparity # [mm]
-    print('f, B, dist', B, fpx, dist)
-    return dist
-    
-def prams_calcurator(hyp, disparity, width, cx, cy, x, y):
-    fpx = forcal_lenth_px = (hyp['FOCAL_LENTH'] * width)/hyp['W_PIXEL_LENTH'] # [px]
-    print('fpxxxxxx, ', fpx, width)
-    distance = distance_formula(disparity, fpx, hyp)
-    real_x, real_y = real_cordinate(cx, cy, x, y, fpx, distance)
-    return disparity, np.round(distance, decimals=2), np.round(real_x, decimals=2), np.round(real_y, decimals=2)
- 
+from enum import Enum
 
+class DistConst(Enum):
+    CriteriaX = 866
+    CriteriaY = 400
+    RealLenth = 5 # m
+    
+def calcurate_distance(ori_images, depth_midas, mid_x, mid_y):
+    #oriH, oriW, _ = ori_images.shape
+    # print("oriH, oriW",oriH, oriW) 500 1732
+    mid_z = depth_midas[int(mid_y)][int(mid_x)]
+    cri_z = depth_midas[DistConst.CriteriaY.value][DistConst.CriteriaX.value]
+    target_dist = (DistConst.RealLenth.value * mid_z) / cri_z
+    return np.round(target_dist, decimals=2)
